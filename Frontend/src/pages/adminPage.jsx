@@ -3,6 +3,7 @@ import { Link, Routes, Route } from 'react-router-dom'
 import { FaShoppingCart } from "react-icons/fa"
 import { BsFillGiftFill } from "react-icons/bs"
 import { FaUserTie } from "react-icons/fa"
+import AdminProductPage from './adminProductPage'
 
 
 export default function adminPage() {
@@ -31,11 +32,11 @@ export default function adminPage() {
 
       </div>
 
-      <div className='w-[calc(100%-300px)] h-fullh-full p-4'>
+      <div className='w-[calc(100%-300px)] h-full p-4'>
         <Routes>
-            <Route path="/orders" element={<h1>Order Page</h1>} />
-            <Route path="/products" element={<h1>Products Page</h1>} />
-            <Route path="/users" element={<h1>Users Page</h1>} />
+            <Route path="orders" element={<h1>Order Page</h1>} />
+            <Route path="products" element={<AdminProductPage/>} />
+            <Route path="users" element={<h1>Users Page</h1>} />
         </Routes>
       </div>
     </div>
