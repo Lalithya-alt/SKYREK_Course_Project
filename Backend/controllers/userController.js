@@ -1,11 +1,14 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 
 export async function createUser(req, res) {
     try {
-        //find already hass user with the same email
+        //find already has user with the same email
         const user = await User.find({email: req.body.email})
 
         if(user != null && user.length > 0) {
@@ -63,10 +66,12 @@ export async function loginUser(req, res) {
                 isEmailVerified: user.isEmailVerified,
                 image: user.image
                 },
-                "secretekey99"
+                process.env.JWT_SECRET,{
+                    expiresIn: "1h"
+                }
             );
 
-      //  return res.json({ message: "Login successful" });
+      return res.json({ message: "Login successful", token: token, isAdmin: user.isAdmin });
     } else {
         return res.status(401).json({ message: "Invalid credentials" });
 
