@@ -3,7 +3,8 @@ import { Link, Routes, Route } from 'react-router-dom'
 import { FaShoppingCart } from "react-icons/fa"
 import { BsFillGiftFill } from "react-icons/bs"
 import { FaUserTie } from "react-icons/fa"
-import AdminProductPage from './adminProductPage'
+import AdminProductPage from './admin/adminProductPage'
+import AdminAddProductForm from './admin/adminAddProductForm'
 
 
 export default function adminPage() {
@@ -37,6 +38,7 @@ export default function adminPage() {
             <Route path="orders" element={<h1>Order Page</h1>} />
             <Route path="products" element={<AdminProductPage/>} />
             <Route path="users" element={<h1>Users Page</h1>} />
+            <Route path="products/add" element={<AdminAddProductForm/>} />
         </Routes>
       </div>
     </div>
