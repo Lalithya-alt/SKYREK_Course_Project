@@ -19,10 +19,10 @@ export async function createProduct(req, res){
             return
         }
 
-        const Product = new Product(req.body)
+        const newProduct = new Product(req.body)
 
-        await Product.save()
-        res.json({message: "Product created successfully", product: Product})
+        await newProduct.save()
+        res.json({message: "Product created successfully", product: newProduct})
 
     }catch(err){
         res.status(500).json({message: "Internal Server Error"})

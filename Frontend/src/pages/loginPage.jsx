@@ -3,32 +3,46 @@ import toast from 'react-hot-toast'
 import axios from 'axios'
 import { MdEmail } from 'react-icons/md'
 import { PiPasswordBold } from 'react-icons/pi'
+import api from '../Utils/api'
+import { useNavigate } from 'react-router-dom'
 
 export default function LoginPage() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   async function handleLogin() {
 
-    if (!email || !password) {
-      toast.error('Please enter email and password')
-      return
-    }
+    setIsLoading(true)
 
     try {
-      const res = await axios.post('http://localhost:3000/users/login', {
+     
+      const res = await api.post('/users/login', {
         email,
         password
       })
+
+      const token = res.data.token
+      localStorage.setItem('token', token)
+
+      if(res.data.isAdmin) {
+       // window.location.href = "/admin"
+        navigate('/admin')
+      } else {
+        // window.location.href = "/"
+        navigate('/')
+      }
 
       console.log(res.data)
       toast.success('Login successful')
 
     } catch (error) {
       console.log(error)
-      toast.error('Login failed. Please check your credentials and try again.')
+      toast.error( error?.response?.data?.message ||'Login failed')
     }
+    setIsLoading(false)
   }
 
   return (
@@ -104,11 +118,13 @@ export default function LoginPage() {
         </div>
 
         {/* Button */}
-        <button
-          className='w-full h-14 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-lg hover:scale-[1.02] transition'
+        <button disabled={isLoading}
+          className='w-full h-14 rounded-2xl bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-lg hover:scale-[1.02] transition'
           onClick={handleLogin}
         >
-          Login
+          {
+            isLoading ?"Loading..." : "login"  
+          }
         </button>
 
         {/* Footer */}

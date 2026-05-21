@@ -20,9 +20,9 @@ app.use(express.json())
 app.use(authenticate)
 
 // Routes
-app.use('/students', studentRouter)
-app.use('/users', userRouter)
-app.use('/products', productRouter)
+app.use('/api/students', studentRouter)
+app.use('/api/users', userRouter)
+app.use('/api/products', productRouter)
 
 // MongoDB connection
 mongoose.connect(mongodbURL).then(() => {
