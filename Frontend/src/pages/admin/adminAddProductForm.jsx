@@ -67,7 +67,7 @@ export default function adminAddProductForm() {
       }
 
       // backend api call to save product
-      await api.post("/products/products", requestBody, {
+      await api.post("/products", requestBody, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -242,6 +242,7 @@ export default function adminAddProductForm() {
               <option value="RAM">RAM</option>
               <option value="Storage">Storage</option>
               <option value="SmartPhones">SmartPhones</option>
+              <option value="Laptops">Laptops</option>
             </select>
           </div>
 
@@ -258,9 +259,10 @@ export default function adminAddProductForm() {
             >
               <option value="nvidea">Nvidia</option>
               <option value="amd">AMD</option>
-              <option value="intel">Intel</option>
+              <option value="intel">ASUS</option>
               <option value="">No Brand</option>
               <option value="Apple">Apple</option>
+
             </select>
           </div>
 

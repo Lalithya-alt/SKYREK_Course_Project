@@ -3,6 +3,7 @@ import { BiSolidCartAdd } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../../Utils/api';
+import LoadingScreen from '../../components/LoadingScreen';
 
 export default function adminProductPage() {
 
@@ -44,12 +45,7 @@ export default function adminProductPage() {
         </div>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-5">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-linear-to-r from-blue-500 to-cyan-500 rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 font-semibold">Loading products...</p>
-            </div>
-          </div>
+          <LoadingScreen />
         ) : products.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No products found.</p>
@@ -131,17 +127,22 @@ export default function adminProductPage() {
                         <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-md hover:shadow-lg"
                         onClick={
                           () => {
-                            toast.error("Delete functionality not implemented yet") 
+                           // toast.error("Delete functionality not implemented yet") 
 
                             const token = localStorage.getItem("token");
                             if (!token) {
                               toast.error("You must be logged in to delete a product");
                               return;
                             }
-                            api.delete(`/products/${product.productId}`)
+                            api.delete(`/products/${product.productId}`, {
+                              headers: {
+                                Authorization: `Bearer ${token}`
+                              }
+                            })
                               .then(res => {
                                 toast.success("Product deleted successfully")
                                 setProducts(prev => prev.filter(p => p.productId !== product.productId))
+                                fetchProducts(); // Refresh the product list after deletion 
                               })
                               .catch(err => {
                                 console.error("Error deleting product:", err)
