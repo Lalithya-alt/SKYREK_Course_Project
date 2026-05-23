@@ -4,33 +4,35 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../../Utils/api';
 import LoadingScreen from '../../components/LoadingScreen';
+import ProductDeleteButton from '../../components/productDeleteButton';
 
 export default function adminProductPage() {
 
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          toast.error("You must be logged in to view products");  
-          return;
-        }
-        const res = await api.get('/products', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setProducts(res.data);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        toast.error("Failed to load products");
-      } finally {
-        setIsLoading(false);
+  const fetchProducts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("You must be logged in to view products");  
+        return;
       }
+      const res = await api.get('/products', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setProducts(res.data);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      toast.error("Failed to load products");
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchProducts();
   }, []);
 
@@ -124,7 +126,7 @@ export default function adminProductPage() {
                         >
                           Edit
                         </Link>
-                        <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-md hover:shadow-lg"
+                        {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-md hover:shadow-lg"
                         onClick={
                           () => {
                            // toast.error("Delete functionality not implemented yet") 
@@ -152,7 +154,8 @@ export default function adminProductPage() {
                           }
                         >
                           Delete
-                        </button>
+                        </button> */}
+                        <ProductDeleteButton productId={product.productId} onRefresh={fetchProducts} />
                       </div>
                     </td>
                   </tr>
