@@ -121,40 +121,12 @@ export default function adminProductPage() {
                     <td className="p-4">
                       <div className="flex gap-2">
                         <Link 
-                          to={`/admin/products/${product.productId}/edit`} 
+                          to={`/admin/products/${product.productId}/edit`}
+                          state={{ product }}
                           className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-md hover:shadow-lg"
                         >
                           Edit
                         </Link>
-                        {/* <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-md hover:shadow-lg"
-                        onClick={
-                          () => {
-                           // toast.error("Delete functionality not implemented yet") 
-
-                            const token = localStorage.getItem("token");
-                            if (!token) {
-                              toast.error("You must be logged in to delete a product");
-                              return;
-                            }
-                            api.delete(`/products/${product.productId}`, {
-                              headers: {
-                                Authorization: `Bearer ${token}`
-                              }
-                            })
-                              .then(res => {
-                                toast.success("Product deleted successfully")
-                                setProducts(prev => prev.filter(p => p.productId !== product.productId))
-                                fetchProducts(); // Refresh the product list after deletion 
-                              })
-                              .catch(err => {
-                                console.error("Error deleting product:", err)
-                                toast.error("Failed to delete product")
-                              })
-                            }
-                          }
-                        >
-                          Delete
-                        </button> */}
                         <ProductDeleteButton productId={product.productId} onRefresh={fetchProducts} />
                       </div>
                     </td>

@@ -5,7 +5,7 @@ import { BsFillGiftFill } from "react-icons/bs"
 import { FaUserTie } from "react-icons/fa"
 import AdminProductPage from './admin/adminProductPage'
 import AdminAddProductForm from './admin/adminAddProductForm'
-
+import AdminEditProductForm from './admin/adminEditProductForm'
 
 export default function adminPage() {
   return (
@@ -39,6 +39,7 @@ export default function adminPage() {
             <Route path="products" element={<AdminProductPage/>} />
             <Route path="users" element={<h1>Users Page</h1>} />
             <Route path="products/add" element={<AdminAddProductForm/>} />
+            <Route path="products/:id/edit" element={<AdminEditProductForm/>} />
         </Routes>
       </div>
     </div>
