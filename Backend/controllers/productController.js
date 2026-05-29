@@ -53,10 +53,18 @@ export async function updateProduct(req, res){
                     res.status(400).json({message: "ProductId cannot be updated"})
                     return
                 }
+                const product = await Product.findOne({productId: req.params.productId})
+                if(product == null){
+                    res.status(404).json({message: "Product not found"})
+                    return
+                }
                 await Product.updateOne({productId: req.params.productId}, req.body)
+                res.json({message: "Product updated successfully"})
             }catch(err){
                 res.status(500).json({message: err.message})
             }
+        }else{
+            res.status(403).json({message: "Only admin can update products"})
         }
 }
 
