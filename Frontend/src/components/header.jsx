@@ -1,10 +1,10 @@
 export default function Header() {
   return (
-    <div className="h-[100px] w-full bg-gradient-to-br from-zinc-950 via-slate-900 to-black text-white flex">
+    <div className="h-25 w-full bg-linear-to-br from-zinc-950 via-slate-900 to-black text-white flex">
       
       {/* Header */}
       <header className="relative z-10 w-full border-b border-white/10 backdrop-blur-xl bg-white/5">
-        <div className="max-w-7xl mx-auto h-[90px] px-6 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto h-22.5 px-6 flex items-center justify-between">
           
           {/* Logo Section */}
           <div className="flex items-center gap-4">
@@ -15,7 +15,7 @@ export default function Header() {
             </div>
 
             <div>
-              <h1 className="text-2xl font-black tracking-wide bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-black tracking-wide bg-linear-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">
                 Digital Mart
               </h1>
 
@@ -31,7 +31,7 @@ export default function Header() {
               Home
             </a>
 
-            <a  href="#" className="hover:text-cyan-400 transition duration-300">
+            <a  href="/products" className="hover:text-cyan-400 transition duration-300">
               Products
             </a>
 
@@ -45,7 +45,7 @@ export default function Header() {
           </nav>
 
           {/* Button */}
-          <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:scale-105 hover:shadow-cyan-500/30 hover:shadow-lg transition duration-300 font-semibold">
+          <button className="px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 hover:scale-105 hover:shadow-cyan-500/30 hover:shadow-lg transition duration-300 font-semibold">
             Log in
           </button>
         </div>
