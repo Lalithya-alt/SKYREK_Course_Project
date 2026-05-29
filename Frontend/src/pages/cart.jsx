@@ -36,31 +36,11 @@ export default function CartPage() {
     toast.success("Item removed from cart");
   };
 
-  const handleClearCart = () => {
-    ClearCart();
-    loadCart();
-    toast.success("Cart cleared");
-  };
 
   return (
     <div className="w-full min-h-screen text-slate-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-6 mb-8">
-          <div className="flex items-center gap-3">
-            <FaShoppingCart className="text-3xl text-accent" />
-            <h1 className="text-3xl font-semibold tracking-tight text-accent">Your Shopping Cart</h1>
-          </div>
-          {cartItems.length > 0 && (
-            <button
-              onClick={handleClearCart}
-              className="text-sm font-semibold bg-red-500 p-2 rounded-md text-white hover:text-white hover:bg-red-500 transition duration-200 cursor-pointer"
-            >
-              Clear Cart
-            </button>
-          )}
-        </div>
-
+      <div className="max-w-5xl mx-auto">
+      
         {cartItems.length === 0 ? (
           /* Empty Cart State */
           <div className="text-center py-16 px-4 bg-slate-900/50 rounded-3xl border border-slate-800 backdrop-blur-md">
@@ -158,12 +138,12 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <button
-                onClick={() => toast.success("Checkout feature coming soon!")}
-                className="w-full py-3.5 rounded-2xl bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-cyan-500/20 cursor-pointer"
+              <Link to = "/checkout"
+                state={{ cartItems }}
+                className="w-full py-3.5 rounded-2xl bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-cyan-500/20 cursor-pointer text-center block"
               >
-                Proceed to Checkout
-              </button>
+                Order Now
+              </Link>
             </div>
           </div>
         )}

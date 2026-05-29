@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import { AddToCart } from '../Utils/cart';
 
 export default function ProductCard({ name, price, labelledprice, photo, productId, description, brand, model, showImage = true }) {
+  const navigate = useNavigate();
 
   const handleImageError = (e) => {
     e.target.src = "/default-product1.jpg";
@@ -79,8 +80,13 @@ export default function ProductCard({ name, price, labelledprice, photo, product
             <button
               className="flex-1 group relative overflow-hidden px-4 py-2.5 rounded-2xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-white text-sm font-semibold hover:scale-105 active:scale-95 transition cursor-pointer"
               onClick={() => {
-                AddToCart({ productId, name, price, labelledprice, photo, description, brand, model }, 1);
-                toast.success("Product added to cart");
+                if (!productId || !name || price === undefined || price === null) {
+                  toast.error("Unable to purchase. Product details are missing.");
+                  return;
+                }
+                const targetProduct = { productId, name, price, labelledprice, photo, description, brand, model };
+                const directBuyItem = [{ product: targetProduct, quantity: 1 }];
+                navigate("/checkout", { state: { cartItems: directBuyItem, isDirectBuy: true } });
               }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
@@ -103,7 +109,7 @@ export default function ProductCard({ name, price, labelledprice, photo, product
           >
             {/* Button Text */}
             <span className="relative z-10 flex items-center justify-center gap-2">
-                Buy
+                Add to cart
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
