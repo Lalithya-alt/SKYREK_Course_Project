@@ -61,6 +61,7 @@ const products = product ? [product] : [];
                   description={product.description}
                   price={product.price}
                   labelledprice={product.labelledprice}
+                  photo={product.Images && product.Images.length > 0 ? product.Images[0] : "/default-product1.jpg"}
                   showImage={false}
                 />
               ))}
