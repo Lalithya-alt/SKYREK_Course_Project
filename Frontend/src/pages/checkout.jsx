@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { getCart, AddToCart, RemoveFromCart, ClearCart, getTotalPrice, getTotalItems } from '../Utils/cart';
 import { FaTrash, FaPlus, FaMinus, FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
+import CreateOrder from '../components/createOrder';
 
 export default function CheckoutPage() {
 
@@ -147,7 +148,7 @@ export default function CheckoutPage() {
             {/* Table layout */}
             <div className="lg:col-span-2 space-y-4 animate-fade-in">
               <div className="w-full overflow-x-auto bg-slate-900/80 border border-slate-800 rounded-3xl backdrop-blur-md p-6 shadow-xl shadow-slate-950/30">
-                <table className="w-full text-slate-100 min-w-[600px] border-collapse">
+                <table className="w-full text-slate-100 min-w-150 border-collapse">
                   <thead>
                     <tr className="border-b border-slate-800 text-xs font-semibold uppercase tracking-wider text-slate-400">
                       <th className="py-4 px-4 text-left">Product</th>
@@ -169,7 +170,7 @@ export default function CheckoutPage() {
                           {/* Product Info (Image + Details) */}
                           <td className="py-4 px-4 text-left align-middle">
                             <div className="flex items-center gap-4">
-                              <div className="w-16 h-16 border border-slate-800 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center bg-slate-950/40 relative group-hover:border-cyan-500/30 transition-colors duration-300">
+                              <div className="w-16 h-16 border border-slate-800 rounded-xl overflow-hidden shrink-0 flex items-center justify-center bg-slate-950/40 relative group-hover:border-cyan-500/30 transition-colors duration-300">
                                 <img
                                   src={prod.photo || "/default-product1.jpg"}
                                   alt={prod.name}
@@ -180,7 +181,7 @@ export default function CheckoutPage() {
                                 />
                               </div>
                               <div className="min-w-0">
-                                <h3 className="font-bold text-white text-sm sm:text-base leading-tight truncate max-w-[200px]" title={prod.name}>
+                                <h3 className="font-bold text-white text-sm sm:text-base leading-tight truncate max-w-50" title={prod.name}>
                                   {prod.name}
                                 </h3>
                                 {(prod.brand || prod.model) && (
@@ -251,7 +252,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Summary */}
-            <div className="p-6 bg-slate-900/90 rounded-3xl border border-slate-800 backdrop-blur-md h-fit space-y-6 shadow-xl shadow-slate-950/50">
+            <div className="p-6 bg-slate-900/90 rounded-3xl border border-slate-800 backdrop-blur-md h-fit space-y-6 shadow-xl shadow-slate-950/50 ">
               <h3 className="text-xl font-bold text-white border-b border-slate-800 pb-4">Order Summary</h3>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm text-slate-400">
@@ -264,12 +265,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <button
-                onClick={() => toast.success("Checkout feature coming soon!")}
-                className="w-full py-3.5 rounded-2xl bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-cyan-500/20 cursor-pointer"
-              >
-                Order Now
-              </button>
+             <CreateOrder cart={cartItems} />
             </div>
           </div>
         )}

@@ -67,7 +67,7 @@ export async function loginUser(req, res) {
                 image: user.image
                 },
                 process.env.JWT_SECRET,{
-                    expiresIn: "1h"
+                    expiresIn: "7d"
                 }
             );
 
