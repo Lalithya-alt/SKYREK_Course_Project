@@ -137,3 +137,57 @@ export async function createOrder(req, res) {
     res.status(500).json({ error: 'Failed to create order', message: error.message });
   }
 }
+
+export async function getAllOrders(req, res) {
+
+if(req.user == null) {
+    console.error("❌ No user authenticated");
+    return res.status(401).json({ error: 'Unauthorized - Please login first' });
+  }
+
+  try {
+
+    if (!req.user.isAdmin) {
+
+      // Non-admin user, fetch only their orders
+      const pagesizeInString = req.params.pageSize||"10"
+      const pageNumberInString = req.params.pageNumber||"1"
+      const pageSize = parseInt(pagesizeInString);
+      const pageNumber = parseInt(pageNumberInString);
+
+      const orderCount = await Order.countDocuments({ email: req.user.email });
+      const totalPages = Math.ceil(orderCount / pageSize);
+
+      const orders = await Order.find({ email: req.user.email }).sort({ date: -1 }).skip((pageNumber - 1) * pageSize).limit(pageSize).exec();
+      res.status(200).json({
+        totalPages: totalPages,
+        currentPage: pageNumber,
+        orders: orders ,
+        totalOrders: orderCount
+      })
+
+    }else{
+
+      //Admin user, proceed to fetch orders with pagination
+      const pagesizeInString = req.params.pageSize||"10"
+      const pageNumberInString = req.params.pageNumber||"1"
+      const pageSize = parseInt(pagesizeInString);
+      const pageNumber = parseInt(pageNumberInString);
+
+      const orderCount = await Order.countDocuments();
+      const totalPages = Math.ceil(orderCount / pageSize);
+
+      const orders = await Order.find().sort({ date: -1 }).skip((pageNumber - 1) * pageSize).limit(pageSize).exec();
+      res.status(200).json({
+        totalPages: totalPages,
+        currentPage: pageNumber,
+        orders: orders ,
+        totalOrders: orderCount
+      })
+
+    } 
+  } catch (error) {
+    console.error("❌ Error fetching orders:", error);
+    res.status(500).json({ error: 'Failed to fetch orders', message: error.message });
+  }
+}
