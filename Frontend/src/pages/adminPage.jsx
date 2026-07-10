@@ -6,6 +6,7 @@ import { FaUserTie } from "react-icons/fa"
 import AdminProductPage from './admin/adminProductPage'
 import AdminAddProductForm from './admin/adminAddProductForm'
 import AdminEditProductForm from './admin/adminEditProductForm'
+import AdminOrdersPage from './admin/adminOrdersPage'
 
 export default function adminPage() {
   return (
@@ -18,7 +19,7 @@ export default function adminPage() {
 
         <div className='w-full h-auto p-4 text-xl text-accent flex justify-center gap-4 '>
           <FaShoppingCart />
-          <Link to={"/admin/orders"}>Orders</Link>
+          <Link to={"/admin/"}>Orders</Link>
         </div>
 
         <div className='w-full h-auto p-4 text-xl text-accent flex justify-center gap-4 '>
@@ -35,7 +36,7 @@ export default function adminPage() {
 
       <div className='w-[calc(100%-300px)] h-full p-4'>
         <Routes>
-            <Route path="orders" element={<h1>Order Page</h1>} />
+            <Route path='/' element={<AdminOrdersPage/>} />
             <Route path="products" element={<AdminProductPage/>} />
             <Route path="users" element={<h1>Users Page</h1>} />
             <Route path="products/add" element={<AdminAddProductForm/>} />

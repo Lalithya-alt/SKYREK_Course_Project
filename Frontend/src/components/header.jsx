@@ -35,6 +35,10 @@ export default function Header() {
               Products
             </a>
 
+            <a  href="/cart" className="hover:text-cyan-400 transition duration-300">
+              Cart
+            </a>
+
             <a href="#" className="hover:text-cyan-400 transition duration-300">
               Services
             </a>
@@ -45,7 +49,7 @@ export default function Header() {
           </nav>
 
           {/* Button */}
-          <button className="px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 hover:scale-105 hover:shadow-cyan-500/30 hover:shadow-lg transition duration-300 font-semibold">
+          <button className="px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 hover:scale-105 hover:shadow-cyan-500/30 hover:shadow-lg transition duration-300 font-semibold" onClick={() => window.location.href = '/login'}>
             Log in
           </button>
         </div>

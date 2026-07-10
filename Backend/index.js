@@ -4,9 +4,11 @@ import Student from './models/Students.js'
 import studentRouter from './routers/studentRouter.js'
 import userRouter from './routers/userRouter.js'
 import productRouter from './routers/productRouter.js'
+import orderRouter from './routers/OrderRouter.js'
 import authenticate from './middleware/authenticate.js'
 import dotenv from 'dotenv'
 import cors from 'cors'
+
 
 dotenv.config()
 
@@ -23,6 +25,7 @@ app.use(authenticate)
 app.use('/api/students', studentRouter)
 app.use('/api/users', userRouter)
 app.use('/api/products', productRouter)
+app.use('/api/orders', orderRouter)
 
 // MongoDB connection
 mongoose.connect(mongodbURL).then(() => {

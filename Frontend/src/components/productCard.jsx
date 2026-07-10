@@ -1,21 +1,29 @@
-import { Link } from "react-router-dom";
-import React from 'react'
-import ProductOverview from '../pages/productOverview'
-
+import { Link, useNavigate } from "react-router-dom";
+import React from 'react';
+import { toast } from 'react-hot-toast';
+import { AddToCart } from '../Utils/cart';
 
 export default function ProductCard({ name, price, labelledprice, photo, productId, description, brand, model, showImage = true }) {
+  const navigate = useNavigate();
 
   const handleImageError = (e) => {
     e.target.src = "/default-product1.jpg";
   };
 
+  const CardContainer = showImage ? Link : "div";
+
   return (
-    <Link to = {"/ProductOverview/" + productId}
-      className="group relative overflow-hidden rounded-3xl hover:-translate-y-3 hover:shadow-cyan-500/20 transition-all duration-500"
+    <CardContainer 
+      {...(showImage ? { to: "/ProductOverview/" + productId } : {})}
+      className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${
+        showImage ? "hover:-translate-y-3 hover:shadow-cyan-500/20" : ""
+      }`}
     >
       
       {/* Glow Effect */}
-      <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+      {showImage && (
+        <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition duration-500"></div>
+      )}
 
       {/* Product Image */}
       {showImage && (
@@ -70,25 +78,38 @@ export default function ProductCard({ name, price, labelledprice, photo, product
         {!showImage ? (
           <div className="flex gap-3 w-full mt-4">
             <button
-              className="flex-1 group relative overflow-hidden px-4 py-2.5 rounded-2xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-white text-sm font-semibold hover:scale-105 active:scale-95 transition"
+              className="flex-1 group relative overflow-hidden px-4 py-2.5 rounded-2xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-white text-sm font-semibold hover:scale-105 active:scale-95 transition cursor-pointer"
+              onClick={() => {
+                if (!productId || !name || price === undefined || price === null) {
+                  toast.error("Unable to purchase. Product details are missing.");
+                  return;
+                }
+                const targetProduct = { productId, name, price, labelledprice, photo, description, brand, model };
+                const directBuyItem = [{ product: targetProduct, quantity: 1 }];
+                navigate("/checkout", { state: { cartItems: directBuyItem, isDirectBuy: true } });
+              }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Buy Now
               </span>
             </button>
             <button
-              className="flex-1 px-4 py-2.5 rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold hover:scale-105 active:scale-95 transition"
+              className="flex-1 px-4 py-2.5 rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold hover:scale-105 active:scale-95 transition cursor-pointer"
+              onClick={() => {
+                AddToCart({ productId, name, price, labelledprice, photo, description, brand, model }, 1);
+                toast.success("Product added to cart");
+              }}
             >
               Add to Cart
             </button>
           </div>
         ) : (
           <button
-            className="w-full group relative overflow-hidden px-5 py-2.5 rounded-2xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-white text-sm font-semibold "
+            className="w-full group relative overflow-hidden px-5 py-2.5 rounded-2xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-white text-sm font-semibold cursor-pointer"
           >
             {/* Button Text */}
             <span className="relative z-10 flex items-center justify-center gap-2">
-                Buy
+                Add to cart
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -107,10 +128,6 @@ export default function ProductCard({ name, price, labelledprice, photo, product
           </button>
         )}
       </div>
-
-        
-     
-    
-    </Link>
+    </CardContainer>
   );
 }
