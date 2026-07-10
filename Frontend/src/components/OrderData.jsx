@@ -45,6 +45,14 @@ export default function AdminOrderData({ order, refresh }) {
     return (
         <>
 
+            <button
+                onClick={() => setIsOpen(true)}
+                title="View order"
+                className="text-blue-600 hover:text-blue-800 p-2 rounded-md transition-colors"
+            >
+                <FaEye size={18} />
+            </button>
+
             {isOpen && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm">
                     <div className="w-full max-w-2xl max-h-[85vh] flex flex-col bg-white rounded-2xl shadow-2xl overflow-hidden">
