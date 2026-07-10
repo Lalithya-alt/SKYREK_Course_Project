@@ -191,3 +191,34 @@ if(req.user == null) {
     res.status(500).json({ error: 'Failed to fetch orders', message: error.message });
   }
 }
+
+export async function updateOrderStatus(req, res) {
+  if(req.user == null || !req.user.isAdmin) {
+    console.error("❌ No user authenticated");
+    return res.status(401).json({ error: 'Unauthorized - Please login first' });
+  }
+try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      console.error("❌ Missing status in request body");
+      return res.status(400).json({ error: 'Missing status in request body' });
+    }
+
+    const order = await Order.findOne({ orderId }).exec();
+    if (!order) {
+      console.error(`❌ Order not found: ${orderId}`);
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    
+    order.status = status;
+    await order.save();
+    console.log(`✅ Order ${orderId} status updated to ${status}`);
+    res.status(200).json({ message: 'Order status updated successfully', order });
+
+}catch (error) {
+    console.error("❌ Error updating order status:", error);
+    res.status(500).json({ error: 'Failed to update order status', message: error.message });
+  }
+}

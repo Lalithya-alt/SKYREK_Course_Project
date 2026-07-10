@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import api from '../../Utils/api';
 import LoadingScreen from '../../components/LoadingScreen';
 import { formatTimestamp } from '../../Utils/dateFormate';
+import AdminOrderData from '../../components/OrderData';
 
 export default function adminOrdersPage() {
 
@@ -114,8 +115,8 @@ export default function adminOrdersPage() {
             
                       <td className="p-4">
                         <div className="flex gap-2">
-                       
-                       
+                        <AdminOrderData order={order} refresh= {()=> setIsLoading(true)}/>
+
                         </div>
                       </td>
                     </tr>
