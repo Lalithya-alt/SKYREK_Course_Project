@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../../Utils/api';
-import LoadingScreen from '../../components/LoadingScreen';
+import LoadingScreen from '../../components/loadingScreen';
 import { formatTimestamp } from '../../Utils/dateFormate';
 import AdminOrderData from '../../components/OrderData';
 
-export default function adminOrdersPage() {
+export default function AdminOrdersPage() {
 
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,7 +115,7 @@ export default function adminOrdersPage() {
             
                       <td className="p-4">
                         <div className="flex gap-2">
-                        <AdminOrderData order={order} refresh= {()=> setIsLoading(true)}/>
+                        <AdminOrderData isAdmin={true} order={order} refresh= {()=> setIsLoading(true)}/>
 
                         </div>
                       </td>

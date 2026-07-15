@@ -83,3 +83,30 @@ export async function loginUser(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getUser(req,res) {
+    if(req.user == null){
+        res.status(401).json({message: "Unauthorized"});
+    }
+    
+    
+    try {
+        const email = req.user.email
+        const user = await User.findOne({ email: req.user.email});
+
+        if(user == null) {
+            return res.status(404).json({ message: "User not found" });
+        }   
+        if(user.isBlocked){
+            return res.status(403).json({message: "User is Blocked"});
+        }
+
+
+        res.json({email: user.email ,firstName: user.firstName, lastName:user.lastName, isAdmin:user.isAdmin, isBlocked:user.isBlocked,isEmailVerified:user.isEmailVerified,image:user.image })
+
+        
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+
+}

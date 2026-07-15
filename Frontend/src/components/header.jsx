@@ -1,3 +1,6 @@
+import UserData from "./userData.jsx";
+
+
 export default function Header() {
   return (
     <div className="h-25 w-full bg-linear-to-br from-zinc-950 via-slate-900 to-black text-white flex">
@@ -48,10 +51,9 @@ export default function Header() {
             </a>
           </nav>
 
-          {/* Button */}
-          <button className="px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 hover:scale-105 hover:shadow-cyan-500/30 hover:shadow-lg transition duration-300 font-semibold" onClick={() => window.location.href = '/login'}>
-            Log in
-          </button>
+          
+
+          <UserData/>
         </div>
       </header>
 
