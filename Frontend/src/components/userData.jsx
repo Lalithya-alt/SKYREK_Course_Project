@@ -27,8 +27,8 @@ useEffect(() => {
             user == null ? 
           <button className="px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 hover:scale-105 hover:shadow-cyan-500/30 hover:shadow-lg transition duration-300 font-semibold" onClick={() => window.location.href = '/login'}>
             Log in
-          </button>:<div>
-            <img src={user.image || "/default-profile.png"} className='w-12 h-12 rounded-full inline-block mr-2'/>
+          </button>:<div className="flex items-center gap-2 flex-nowrap shrink-0">
+            <img src={user.image || "/default-profile.png"} className='w-12 h-12 rounded-full object-cover shrink-0' alt="profile"/>
             <select
                 value={selectedOption}
                 onChange={(e) => {
@@ -63,14 +63,11 @@ useEffect(() => {
                 onFocus={e => e.target.style.boxShadow = "0 0 18px rgba(34,211,238,0.4)"}
                 onBlur={e => e.target.style.boxShadow = "0 0 12px rgba(34,211,238,0.15)"}
             >
-                <option value="" disabled style={{ background: "#0f172a", color: "#94a3b8" }}>Hi, {user.firstName} ▾</option>
+                <option value="me" disabled style={{ background: "#0f172a", color: "#94a3b8" }}>Hi, {user.firstName} ▾</option>
                 <option value="settings" style={{ background: "#0f172a", color: "white" }}>⚙️ Settings</option>
                 <option value="myorders" style={{ background: "#0f172a", color: "white" }}>📦 My Orders</option>
                 <option value="logout" style={{ background: "#0f172a", color: "#f87171" }}>🚪 Logout</option>
             </select>
-
-
-
             </div>
         }
 
