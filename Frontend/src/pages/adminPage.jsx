@@ -9,6 +9,26 @@ import AdminEditProductForm from './admin/adminEditProductForm'
 import AdminOrdersPage from './admin/adminOrdersPage'
 
 export default function AdminPage() {
+
+const [user,setUser] = useState(null)
+const navigate = useNavigate();
+
+useEffect(() => {
+    const token = localStorage.getItem("token")
+   if(token != null) {
+        axios.get("/api/users/me",{ 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then((response) => {
+            if(!response.data.isAdmin){
+              toast.error("You are not authorized to access this page");
+              navigate("/");
+            }
+        })
+   }
+}, [])
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
