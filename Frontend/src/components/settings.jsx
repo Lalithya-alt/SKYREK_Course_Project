@@ -104,6 +104,13 @@ export default function Settings() {
                 </div>
                 <form className="flex flex-col gap-5 flex-grow justify-between" onSubmit={handleUpdateProfile}>
                     <div className="flex flex-col gap-4">
+                        <div className="flex flex-col items-center gap-2 mb-2">
+                            <img 
+                                src={image ? URL.createObjectURL(image) : (user && user.image ? user.image : "/default-profile.png")} 
+                                className="w-24 h-24 rounded-full object-cover border-2 border-cyan-500 shadow-md shrink-0" 
+                                alt="profile preview" 
+                            />
+                        </div>
                         <div className="flex gap-4">
                             <div className="flex-1">
                                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" htmlFor="firstName">First Name</label>

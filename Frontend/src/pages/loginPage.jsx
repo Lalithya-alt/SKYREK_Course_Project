@@ -189,7 +189,7 @@ export default function LoginPage() {
         {/* Footer */}
         <p className='text-center text-gray-300 text-sm'>
           Don’t have an account?{' '}
-          <span className='text-cyan-300 cursor-pointer hover:underline'>
+          <span className='text-cyan-300 cursor-pointer hover:underline' onClick={() => navigate('/register')}>
             Register
           </span>
         </p>

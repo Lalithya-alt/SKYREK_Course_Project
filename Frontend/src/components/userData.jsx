@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from "axios"
+import api from '../Utils/api'
 
 export default function UserData() {
 
@@ -11,12 +11,11 @@ const navigate = useNavigate();
 useEffect(() => {
     const token = localStorage.getItem("token")
    if(token != null) {
-        axios.get("/api/users/me",{ 
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        }).then((response) => {
+        api.get("/users/me").then((response) => {
             setUser(response.data)
+        }).catch((err) => {
+            console.error(err);
+            setUser(null);
         })
    }
 }, [])

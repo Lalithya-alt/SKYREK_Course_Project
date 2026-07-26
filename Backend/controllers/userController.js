@@ -139,15 +139,25 @@ export async function updateProfile(req,res) {
     }
 
     try {
-        await User.updateOne(
+        const updatedUser = await User.findOneAndUpdate(
             { email: req.user.email },
             { 
                 firstName: req.body.firstName, 
                 lastName: req.body.lastName, 
                 image: req.body.image 
-            }
+            },
+            { new: true }
         )
-        res.json({ message : "Profile Update Successfully" })
+        res.json({
+            message: "Profile Update Successfully",
+            email: updatedUser.email,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+            isAdmin: updatedUser.isAdmin,
+            isBlocked: updatedUser.isBlocked,
+            isEmailVerified: updatedUser.isEmailVerified,
+            image: updatedUser.image
+        })
 
     } catch (error) {
          res.json({message : error.meassage})
@@ -172,6 +182,9 @@ export async function googleLogin(req, res) {
                 image: image || "",
                 isEmailVerified: true
             });
+            await user.save();
+        } else if (!user.image && image) {
+            user.image = image;
             await user.save();
         }
 
