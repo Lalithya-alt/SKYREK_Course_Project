@@ -4,7 +4,7 @@ import { MdClose } from "react-icons/md";
 import api from '../Utils/api';
 import toast from 'react-hot-toast';
 
-export default function AdminOrderData({ order, refresh }) {
+export default function AdminOrderData({ order, refresh, isAdmin }) {
     const [isOpen, setIsOpen] = useState(false);
     const [orderStatus, setOrderStatus] = useState(order.status || 'pending');
     const [isUpdating, setIsUpdating] = useState(false);
@@ -44,6 +44,14 @@ export default function AdminOrderData({ order, refresh }) {
 
     return (
         <>
+
+            <button
+                onClick={() => setIsOpen(true)}
+                title="View order"
+                className="text-blue-600 hover:text-blue-800 p-2 rounded-md transition-colors"
+            >
+                <FaEye size={18} />
+            </button>
 
             {isOpen && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm">
@@ -96,24 +104,30 @@ export default function AdminOrderData({ order, refresh }) {
                             <div className="bg-blue-50 rounded-lg p-2 mb-4 border border-blue-100">
                                 <div className="flex items-center gap-2">
                                     <label className="font-semibold text-gray-700 text-sm whitespace-nowrap">Status:</label>
-                                    <select 
-                                        value={orderStatus} 
-                                        onChange={(e) => setOrderStatus(e.target.value)}
-                                        className="flex-1 px-2 py-1 text-sm border border-blue-300 rounded bg-white text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                    >
-                                        {statusOptions.map((status) => (
-                                            <option key={status} value={status}>
-                                                {status.charAt(0).toUpperCase() + status.slice(1)}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <button
-                                        onClick={handleStatusUpdate}
-                                        disabled={isUpdating}
-                                        className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-3 py-1 text-sm rounded font-semibold disabled:cursor-not-allowed"
-                                    >
-                                        {isUpdating ? '...' : 'Save'}
-                                    </button>
+                                    {isAdmin ? (
+                                        <>
+                                            <select
+                                                value={orderStatus}
+                                                onChange={(e) => setOrderStatus(e.target.value)}
+                                                className="flex-1 px-2 py-1 text-sm border border-blue-300 rounded bg-white text-gray-800 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                            >
+                                                {statusOptions.map((status) => (
+                                                    <option key={status} value={status}>
+                                                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                onClick={handleStatusUpdate}
+                                                disabled={isUpdating}
+                                                className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-3 py-1 text-sm rounded font-semibold disabled:cursor-not-allowed"
+                                            >
+                                                {isUpdating ? '...' : 'Save'}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <span className="text-sm font-semibold text-gray-800 capitalize">{orderStatus}</span>
+                                    )}
                                 </div>
                             </div>
 

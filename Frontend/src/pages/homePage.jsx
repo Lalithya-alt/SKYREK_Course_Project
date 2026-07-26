@@ -5,6 +5,8 @@ import ProductPage from './productPage'
 import ProductOverview from './productOverview'
 import CartPage from './cart'
 import Checkout from './checkout'
+import MyOrders from './MyOrders'
+import Settings from '../components/settings'
 
 
 export default function HomePage() {
@@ -23,6 +25,8 @@ export default function HomePage() {
           <Route path="/ProductOverview/:productId" element={<ProductOverview />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path ='/myOrders' element={<MyOrders/>} />
+          <Route path ='settings' element={<Settings/>} />
           <Route path="/*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
         </div>

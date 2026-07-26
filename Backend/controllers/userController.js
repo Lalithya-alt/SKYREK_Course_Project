@@ -83,3 +83,131 @@ export async function loginUser(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export async function getUser(req,res) {
+    if(req.user == null){
+        return res.status(401).json({message: "Unauthorized"});
+    }
+    
+    
+    try {
+        const email = req.user.email
+        const user = await User.findOne({ email: req.user.email});
+
+        if(user == null) {
+            return res.status(404).json({ message: "User not found" });
+        }   
+        if(user.isBlocked){
+            return res.status(403).json({message: "User is Blocked"});
+        }
+
+
+        res.json({email: user.email ,firstName: user.firstName, lastName:user.lastName, isAdmin:user.isAdmin, isBlocked:user.isBlocked,isEmailVerified:user.isEmailVerified,image:user.image })
+
+        
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+
+}
+
+export async function updatePassword(req,res) {
+    
+    if(req.user == null){
+        res.status(401).json({message:"Unauthorized"})
+        return
+    }
+
+    const password = req.body.password
+    const passwordHash = bcrypt.hashSync(password,10)
+
+    try{
+        const email = req.user.email
+        await User.updateOne({email : email} ,{password : passwordHash} )
+        res.json({ message : "Password Update Successfully" })
+
+    }catch(error){
+        res.json({message : error.meassage})
+    }
+}
+
+export async function updateProfile(req,res) {
+
+     if(req.user == null){
+        res.status(401).json({message:"Unauthorized"})
+        return
+    }
+
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { email: req.user.email },
+            { 
+                firstName: req.body.firstName, 
+                lastName: req.body.lastName, 
+                image: req.body.image 
+            },
+            { new: true }
+        )
+        res.json({
+            message: "Profile Update Successfully",
+            email: updatedUser.email,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+            isAdmin: updatedUser.isAdmin,
+            isBlocked: updatedUser.isBlocked,
+            isEmailVerified: updatedUser.isEmailVerified,
+            image: updatedUser.image
+        })
+
+    } catch (error) {
+         res.json({message : error.meassage})
+    }
+}
+
+export async function googleLogin(req, res) {
+    try {
+        const { email, firstName, lastName, image } = req.body;
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        let user = await User.findOne({ email });
+        if (user == null) {
+            const passwordHash = await bcrypt.hash(Math.random().toString(36).slice(-8), 10);
+            user = new User({
+                email,
+                firstName: firstName || "Google User",
+                lastName: lastName || "",
+                password: passwordHash,
+                image: image || "",
+                isEmailVerified: true
+            });
+            await user.save();
+        } else if (!user.image && image) {
+            user.image = image;
+            await user.save();
+        }
+
+        if (user.isBlocked) {
+            return res.status(403).json({ message: "User is blocked" });
+        }
+
+        const token = jwt.sign(
+            { 
+                email: user.email, 
+                firstName: user.firstName,
+                lastName: user.lastName,
+                isAdmin: user.isAdmin,
+                isBlocked: user.isBlocked,
+                isEmailVerified: user.isEmailVerified,
+                image: user.image
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        return res.json({ message: "Login successful", token: token, isAdmin: user.isAdmin });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
