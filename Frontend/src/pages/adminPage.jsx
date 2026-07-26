@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
-import { Link, Routes, Route } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, Routes, Route, useNavigate } from 'react-router-dom'
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa"
 import { BsFillGiftFill } from "react-icons/bs"
 import { FaUserTie } from "react-icons/fa"
+import toast from 'react-hot-toast'
+import api from '../Utils/api'
 import AdminProductPage from './admin/adminProductPage'
 import AdminAddProductForm from './admin/adminAddProductForm'
 import AdminEditProductForm from './admin/adminEditProductForm'
 import AdminOrdersPage from './admin/adminOrdersPage'
+import LoadingScreen from '../components/LoadingScreen'
 
 export default function AdminPage() {
 
@@ -15,19 +18,24 @@ const navigate = useNavigate();
 
 useEffect(() => {
     const token = localStorage.getItem("token")
-   if(token != null) {
-        axios.get("/api/users/me",{ 
-            headers: {
-                "Authorization": `Bearer ${token}`
+    if (token != null) {
+        api.get("/users/me").then((response) => {
+            if (!response.data.isAdmin) {
+                toast.error("You are not authorized to access this page");
+                navigate("/");
+            } else {
+                setUser(response.data);
             }
-        }).then((response) => {
-            if(!response.data.isAdmin){
-              toast.error("You are not authorized to access this page");
-              navigate("/");
-            }
-        })
-   }
-}, [])
+        }).catch((err) => {
+            console.error(err);
+            toast.error("Authentication failed");
+            navigate("/");
+        });
+    } else {
+        toast.error("You are not authorized to access this page");
+        navigate("/");
+    }
+}, [navigate])
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -107,6 +115,7 @@ useEffect(() => {
 
         {/* Dynamic Route Content */}
         <div className='flex-1 overflow-auto p-4 md:p-8 bg-slate-50'>
+          {user ==null? <LoadingScreen/> :
           <Routes>
             <Route path='/' element={<AdminOrdersPage/>} />
             <Route path="products" element={<AdminProductPage/>} />
@@ -114,6 +123,8 @@ useEffect(() => {
             <Route path="products/add" element={<AdminAddProductForm/>} />
             <Route path="products/:id/edit" element={<AdminEditProductForm/>} />
           </Routes>
+          }
+         
         </div>
       </div>
     </div>

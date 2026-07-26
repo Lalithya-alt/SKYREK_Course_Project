@@ -86,7 +86,7 @@ export async function loginUser(req, res) {
 
 export async function getUser(req,res) {
     if(req.user == null){
-        res.status(401).json({message: "Unauthorized"});
+        return res.status(401).json({message: "Unauthorized"});
     }
     
     
@@ -109,4 +109,47 @@ export async function getUser(req,res) {
         res.status(500).json({message: error.message});
     }
 
+}
+
+export async function updatePassword(req,res) {
+    
+    if(req.user == null){
+        res.status(401).json({message:"Unauthorized"})
+        return
+    }
+
+    const password = req.body.password
+    const passwordHash = bcrypt.hashSync(password,10)
+
+    try{
+        const email = req.user.email
+        await User.updateOne({email : email} ,{password : passwordHash} )
+        res.json({ message : "Password Update Successfully" })
+
+    }catch(error){
+        res.json({message : error.meassage})
+    }
+}
+
+export async function updateProfile(req,res) {
+
+     if(req.user == null){
+        res.status(401).json({message:"Unauthorized"})
+        return
+    }
+
+    try {
+        await User.updateOne(
+            { email: req.user.email },
+            { 
+                firstName: req.body.firstName, 
+                lastName: req.body.lastName, 
+                image: req.body.image 
+            }
+        )
+        res.json({ message : "Profile Update Successfully" })
+
+    } catch (error) {
+         res.json({message : error.meassage})
+    }
 }
