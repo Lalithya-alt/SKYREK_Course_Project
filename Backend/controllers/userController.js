@@ -153,3 +153,48 @@ export async function updateProfile(req,res) {
          res.json({message : error.meassage})
     }
 }
+
+export async function googleLogin(req, res) {
+    try {
+        const { email, firstName, lastName, image } = req.body;
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        let user = await User.findOne({ email });
+        if (user == null) {
+            const passwordHash = await bcrypt.hash(Math.random().toString(36).slice(-8), 10);
+            user = new User({
+                email,
+                firstName: firstName || "Google User",
+                lastName: lastName || "",
+                password: passwordHash,
+                image: image || "",
+                isEmailVerified: true
+            });
+            await user.save();
+        }
+
+        if (user.isBlocked) {
+            return res.status(403).json({ message: "User is blocked" });
+        }
+
+        const token = jwt.sign(
+            { 
+                email: user.email, 
+                firstName: user.firstName,
+                lastName: user.lastName,
+                isAdmin: user.isAdmin,
+                isBlocked: user.isBlocked,
+                isEmailVerified: user.isEmailVerified,
+                image: user.image
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        return res.json({ message: "Login successful", token: token, isAdmin: user.isAdmin });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
