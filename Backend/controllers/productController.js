@@ -110,3 +110,26 @@ export async function getproductById(req, res){
     }
 
 }
+
+export async function searchProducts(req, res) {
+    try {
+        const query = req.query.query || req.query.q || req.params.query;
+        if (!query) {
+            return res.status(400).json({ message: "Search query is required" });
+        }
+
+        const filter = {
+            $or: [
+                { name: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ],
+            isavailable : true
+        };
+
+        const products = await Product.find(filter);
+        return res.json(products);
+        
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+}
