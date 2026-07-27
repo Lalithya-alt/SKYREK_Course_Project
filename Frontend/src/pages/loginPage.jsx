@@ -7,6 +7,7 @@ import api from '../Utils/api'
 import { useNavigate } from 'react-router-dom'
 import { useGoogleLogin } from '@react-oauth/google'
 
+
 export default function LoginPage() {
 
   const [email, setEmail] = useState('')
@@ -155,7 +156,7 @@ export default function LoginPage() {
             Remember me
           </label>
 
-          <a href='#' className='hover:text-cyan-300'>
+          <a href='/forgetPassword' className='hover:text-cyan-300'>
             Forgot Password?
           </a>
         </div>

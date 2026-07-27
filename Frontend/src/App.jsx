@@ -8,6 +8,7 @@ import LoginPage from './pages/loginPage'
 import AdminPage from './pages/adminPage'
 import Test from './pages/test'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import ForgetPassword from './pages/forgetPassword'
 
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path='/*' element={<HomePage />} />
         <Route path='/admin/*' element={<AdminPage />} />
         <Route path='/test' element={<Test />} />
+        <Route path='/forgetPassword' element={<ForgetPassword />} />
         
       </Routes>
     </div>
