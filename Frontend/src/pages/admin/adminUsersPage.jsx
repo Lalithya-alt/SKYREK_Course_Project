@@ -42,6 +42,30 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, [pageNumber, pageSize]);
 
+  const handleUpdateStatusAndRole = (email, updates) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to modify users");
+      return;
+    }
+
+    api.put(`/users/${email}/status-role`, updates, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((res) => {
+      toast.success(res.data.message || "User updated successfully");
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => u.email === email ? { ...u, ...updates } : u)
+      );
+    })
+    .catch((err) => {
+      console.error("Error updating user:", err);
+      toast.error(err?.response?.data?.message || "Failed to update user");
+    });
+  };
+
   return (
     <div className='w-full h-full p-6 flex flex-col'>
         
@@ -73,6 +97,7 @@ export default function AdminUsersPage() {
                     <th className="p-4 text-left font-bold">Role</th>
                     <th className="p-4 text-left font-bold">Verification</th>
                     <th className="p-4 text-left font-bold">Status</th>
+                    <th className="p-4 text-center font-bold">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white">
@@ -120,6 +145,30 @@ export default function AdminUsersPage() {
                         }`}>
                           {user.isBlocked ? 'Blocked' : 'Active'}
                         </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleUpdateStatusAndRole(user.email, { isAdmin: !user.isAdmin })}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer hover:shadow-md ${
+                              user.isAdmin 
+                                ? 'bg-amber-100 hover:bg-amber-200 text-amber-700 border border-amber-200' 
+                                : 'bg-purple-100 hover:bg-purple-200 text-purple-700 border border-purple-200'
+                            }`}
+                          >
+                            {user.isAdmin ? 'Make Customer' : 'Make Admin'}
+                          </button>
+                          <button
+                            onClick={() => handleUpdateStatusAndRole(user.email, { isBlocked: !user.isBlocked })}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer hover:shadow-md ${
+                              user.isBlocked 
+                                ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border border-emerald-200' 
+                                : 'bg-red-100 hover:bg-red-200 text-red-700 border border-red-200'
+                            }`}
+                          >
+                            {user.isBlocked ? 'Unblock' : 'Block'}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
