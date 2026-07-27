@@ -314,3 +314,35 @@ export async function resetPassword(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
+export async function getAllUsers(req, res) {
+    if (req.user == null || req.user.isAdmin !== true) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+
+    try {
+        const pageSizeInString = req.query.pageSize || "10";
+        const pageNumberInString = req.query.pageNumber || "1";
+        const pageSize = parseInt(pageSizeInString) || 10;
+        const pageNumber = parseInt(pageNumberInString) || 1;
+
+        const userCount = await User.countDocuments();
+        const totalPages = Math.ceil(userCount / pageSize);
+
+        const users = await User.find()
+            .sort({ _id: -1 })
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .exec();
+       
+        res.status(200).json({
+            totalPages: totalPages,
+            currentPage: pageNumber,
+            totalUsers: userCount,
+            users: users
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
