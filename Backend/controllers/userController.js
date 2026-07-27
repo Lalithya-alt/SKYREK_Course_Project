@@ -2,9 +2,21 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import OTP from "../models/otp.js";
+import nodemailer from "nodemailer"; 
 
 dotenv.config();
 
+const transporter = nodemailer.createTransport({
+    service : "gmail",
+    host:"smtp.gmail.com",
+    port:587,
+    secure:false,
+    auth : {
+        user : process.env.EMAIL,
+        pass : process.env.APP_PASSWORD
+    }
+})
 
 export async function createUser(req, res) {
     try {
@@ -54,7 +66,7 @@ export async function loginUser(req, res) {
         return res.status(400).json({ message: "User not found" });
        }
 
-    const isPasswordValid = await bcrypt.compareSync(password, user.password); 
+    const isPasswordValid = await bcrypt.compare(password, user.password); 
 
     if(isPasswordValid) {
             const token = jwt.sign(
@@ -118,16 +130,16 @@ export async function updatePassword(req,res) {
         return
     }
 
-    const password = req.body.password
-    const passwordHash = bcrypt.hashSync(password,10)
+    const password = req.body.password;
 
     try{
-        const email = req.user.email
-        await User.updateOne({email : email} ,{password : passwordHash} )
-        res.json({ message : "Password Update Successfully" })
+        const passwordHash = await bcrypt.hash(password, 10);
+        const email = req.user.email;
+        await User.updateOne({email : email} ,{password : passwordHash} );
+        res.json({ message : "Password Update Successfully" });
 
     }catch(error){
-        res.json({message : error.meassage})
+        res.json({message : error.message});
     }
 }
 
@@ -147,7 +159,12 @@ export async function updateProfile(req,res) {
                 image: req.body.image 
             },
             { new: true }
-        )
+        );
+
+        if (updatedUser == null) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         res.json({
             message: "Profile Update Successfully",
             email: updatedUser.email,
@@ -157,10 +174,10 @@ export async function updateProfile(req,res) {
             isBlocked: updatedUser.isBlocked,
             isEmailVerified: updatedUser.isEmailVerified,
             image: updatedUser.image
-        })
+        });
 
     } catch (error) {
-         res.json({message : error.meassage})
+         res.json({message : error.message});
     }
 }
 
@@ -207,6 +224,160 @@ export async function googleLogin(req, res) {
         );
 
         return res.json({ message: "Login successful", token: token, isAdmin: user.isAdmin });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+export async function sendOTP(req, res) {
+    try {
+        const email = req.body.email;
+        const user = await User.findOne({ email: email });
+
+        if (user == null) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.isBlocked) {
+            return res.status(403).json({ message: "User is blocked" });
+        }
+
+        await OTP.deleteOne({ email: email });
+
+        // otp between 100000 and 999999
+        const otpNumber = Math.floor(100000 + Math.random() * 900000);
+
+        // save otp in database (using OTP collection since User model doesn't store OTP fields)
+        const otpHash = await bcrypt.hash(otpNumber.toString(), 10);
+
+        const newOTP = new OTP({
+            email: email,
+            otp: otpHash
+        });
+        await newOTP.save();
+
+        // TODO: Send email with OTP
+       const message = {
+        from : process.env.EMAIL,
+        to : email,
+        subject : "SKYREK OTP for Password Reset",
+        text : `Your OTP for password reset is : ${otpNumber}`,
+       }
+       try {
+           await transporter.sendMail(message);
+        } catch (error) {
+           console.error(error);
+        }
+
+        return res.json({ message: "OTP sent successfully" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export async function resetPassword(req, res) {
+    try {
+        const { email, otp, password } = req.body;
+
+        if (!email || !otp || !password) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        // Find the OTP document in the database
+        const otpRecord = await OTP.findOne({ email });
+        if (!otpRecord) {
+            return res.status(400).json({ message: "OTP has expired or is invalid" });
+        }
+
+        // Compare the provided OTP with the hashed OTP in database
+        const isOtpValid = await bcrypt.compare(otp.toString(), otpRecord.otp);
+        if (!isOtpValid) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        // Find user and update password
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 10);
+        user.password = passwordHash;
+        await user.save();
+
+        // Delete the used OTP
+        await OTP.deleteOne({ email });
+
+        return res.json({ message: "Password reset successful" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getAllUsers(req, res) {
+    if (req.user == null || req.user.isAdmin !== true) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+
+    try {
+        const pageSizeInString = req.query.pageSize || "10";
+        const pageNumberInString = req.query.pageNumber || "1";
+        const pageSize = parseInt(pageSizeInString) || 10;
+        const pageNumber = parseInt(pageNumberInString) || 1;
+
+        const userCount = await User.countDocuments();
+        const totalPages = Math.ceil(userCount / pageSize);
+
+        const users = await User.find()
+            .sort({ _id: -1 })
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .exec();
+       
+        res.status(200).json({
+            totalPages: totalPages,
+            currentPage: pageNumber,
+            totalUsers: userCount,
+            users: users
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function updateUserStatusAndRole(req, res) {
+    if (req.user == null || req.user.isAdmin !== true) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+
+    try {
+        const { email } = req.params;
+        const { isAdmin, isBlocked } = req.body;
+
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        if (user.email === req.user.email) {
+            res.status(400).json({ message: "You cannot change your own role or status" });
+            return;
+        }
+
+        if (isAdmin !== undefined) {
+            user.isAdmin = isAdmin;
+        }
+        if (isBlocked !== undefined) {
+            user.isBlocked = isBlocked;
+        }
+
+        await user.save();
+
+        res.status(200).json({ message: "User updated successfully", user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -9,7 +9,8 @@ import AdminProductPage from './admin/adminProductPage'
 import AdminAddProductForm from './admin/adminAddProductForm'
 import AdminEditProductForm from './admin/adminEditProductForm'
 import AdminOrdersPage from './admin/adminOrdersPage'
-import LoadingScreen from '../components/LoadingScreen'
+import LoadingScreen from '../components/loadingScreen'
+import AdminUsersPage from './admin/adminUsersPage'
 
 export default function AdminPage() {
 
@@ -119,7 +120,7 @@ useEffect(() => {
           <Routes>
             <Route path='/' element={<AdminOrdersPage/>} />
             <Route path="products" element={<AdminProductPage/>} />
-            <Route path="users" element={<h1 className="text-2xl font-bold text-slate-800">Users Page</h1>} />
+            <Route path="users" element={<AdminUsersPage/>} />
             <Route path="products/add" element={<AdminAddProductForm/>} />
             <Route path="products/:id/edit" element={<AdminEditProductForm/>} />
           </Routes>
