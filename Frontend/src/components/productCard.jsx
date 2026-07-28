@@ -80,6 +80,12 @@ export default function ProductCard({ name, price, labelledprice, photo, product
             <button
               className="flex-1 group relative overflow-hidden px-4 py-2.5 rounded-2xl bg-linear-to-br from-cyan-500 via-blue-600 to-indigo-700 text-white text-sm font-semibold hover:scale-105 active:scale-95 transition cursor-pointer"
               onClick={() => {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                  toast.error("Please log in first to purchase products.");
+                  navigate("/login");
+                  return;
+                }
                 if (!productId || !name || price === undefined || price === null) {
                   toast.error("Unable to purchase. Product details are missing.");
                   return;
@@ -96,6 +102,12 @@ export default function ProductCard({ name, price, labelledprice, photo, product
             <button
               className="flex-1 px-4 py-2.5 rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold hover:scale-105 active:scale-95 transition cursor-pointer"
               onClick={() => {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                  toast.error("Please log in first to add items to your cart.");
+                  navigate("/login");
+                  return;
+                }
                 AddToCart({ productId, name, price, labelledprice, photo, description, brand, model }, 1);
                 toast.success("Product added to cart");
               }}

@@ -263,6 +263,7 @@ export default function adminAddProductForm() {
               <option value="intel">ASUS</option>
               <option value="dell">Dell</option>
               <option value="Apple">Apple</option>
+              <option value="Google">Google</option>
 
             </select>
           </div>

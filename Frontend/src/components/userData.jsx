@@ -40,6 +40,7 @@ useEffect(() => {
                     }
                     if (e.target.value === "logout") {
                         localStorage.removeItem("token");
+                        localStorage.removeItem("cart");
                         setUser(null);
                         window.location.href = '/';
                     }
