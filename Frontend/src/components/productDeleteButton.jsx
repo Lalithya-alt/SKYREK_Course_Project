@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CiTrash } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
-import api from "../utils/api";
+import api from "../Utils/api";
 import toast from "react-hot-toast";
 
 export default function ProductDeleteButton(props){
