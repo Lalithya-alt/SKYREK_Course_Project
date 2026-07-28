@@ -51,13 +51,7 @@ export default function LandingComponent() {
           </a>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-60 animate-bounce">
-          <span className="text-xs uppercase tracking-[3px] text-slate-400 font-medium">Scroll Down</span>
-          <div className="w-5 h-8 rounded-full border-2 border-slate-400 flex justify-center p-1">
-            <div className="w-1 h-2 rounded-full bg-cyan-400"></div>
-          </div>
-        </div>
+       
 
       </div>
     </div>

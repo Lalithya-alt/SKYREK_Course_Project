@@ -21,6 +21,7 @@ export default function MyOrders() {
         const token = localStorage.getItem("token");
         if (!token) {
           toast.error("You must be logged in to view orders");
+          window.location.href = "/login";
           return;
         }
         const res = await api.get(`/orders/${pageNumber}/${pageSize}`, {

@@ -37,13 +37,15 @@ export default function Header() {
             <a href="/products" className="hover:text-cyan-400 transition duration-300">
               Products
             </a>
-            <a href="/cart" className="hover:text-cyan-400 transition duration-300">
-              Cart
-            </a>
-            <a href="#" className="hover:text-cyan-400 transition duration-300">
+            {localStorage.getItem("token") && (
+              <a href="/cart" className="hover:text-cyan-400 transition duration-300">
+                Cart
+              </a>
+            )}
+            <a href="/Services" className="hover:text-cyan-400 transition duration-300">
               Services
             </a>
-            <a href="#" className="hover:text-cyan-400 transition duration-300">
+            <a href="/ContactUS" className="hover:text-cyan-400 transition duration-300">
               Contact
             </a>
           </nav>
@@ -80,22 +82,24 @@ export default function Header() {
             >
               Products
             </a>
+            {localStorage.getItem("token") && (
+              <a 
+                href="/cart" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-lg font-medium hover:text-cyan-400 transition duration-200 py-2 border-b border-white/5"
+              >
+                Cart
+              </a>
+            )}
             <a 
-              href="/cart" 
-              onClick={() => setIsMenuOpen(false)}
-              className="text-lg font-medium hover:text-cyan-400 transition duration-200 py-2 border-b border-white/5"
-            >
-              Cart
-            </a>
-            <a 
-              href="#" 
+              href="/Services" 
               onClick={() => setIsMenuOpen(false)}
               className="text-lg font-medium hover:text-cyan-400 transition duration-200 py-2 border-b border-white/5"
             >
               Services
             </a>
             <a 
-              href="#" 
+              href="/ContactUS" 
               onClick={() => setIsMenuOpen(false)}
               className="text-lg font-medium hover:text-cyan-400 transition duration-200 py-2"
             >
