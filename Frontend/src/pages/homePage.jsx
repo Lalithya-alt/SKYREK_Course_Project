@@ -7,6 +7,7 @@ import CartPage from './cart'
 import Checkout from './checkout'
 import MyOrders from './MyOrders'
 import Settings from '../components/settings'
+import LandingComponent from './landingcomponent'
 
 
 export default function HomePage() {
@@ -17,7 +18,7 @@ export default function HomePage() {
 
         <div className='w-full h-[calc(100%-100px)]  flex '>
         <Routes>
-          <Route path='/' element={<h1>Home Page</h1>} />
+          <Route path='/' element={<LandingComponent />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/ContactUS" element={<h1>Contact Us Page</h1>} />
           <Route path="/AboutUs" element={<h1>About Us Page</h1>} />
