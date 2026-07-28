@@ -3,7 +3,7 @@ import { BiSolidCartAdd } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../../Utils/api';
-import LoadingScreen from '../../components/LoadingScreen';
+import LoadingScreen from '../../components/loadingScreen';
 import ProductDeleteButton from '../../components/productDeleteButton';
 
 export default function adminProductPage() {
