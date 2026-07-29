@@ -9,6 +9,7 @@ import MyOrders from './MyOrders'
 import Settings from '../components/settings'
 import LandingComponent from './landingcomponent'
 import ServicesPage from './servicesPage'
+import ContactUS from './contactUS'
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -28,7 +29,7 @@ export default function HomePage() {
         <Routes>
           <Route path='/' element={<LandingComponent />} />
           <Route path="/products" element={<ProductPage />} />
-          <Route path="/ContactUS" element={<h1>Contact Us Page</h1>} />
+          <Route path="/ContactUS" element={<ContactUS />} />
           <Route path="/Services" element={<ServicesPage />} />
           <Route path="/ProductOverview/:productId" element={<ProductOverview />} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
