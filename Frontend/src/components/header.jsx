@@ -1,9 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdMenu, MdClose } from "react-icons/md";
 import UserData from "./userData.jsx";
+import api from '../Utils/api';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      api.get("/users/me").then((response) => {
+        setUser(response.data);
+      }).catch((err) => {
+        console.error("Error fetching user in Header:", err);
+        setUser(null);
+      });
+    }
+  }, []);
 
   return (
     <div className="h-25 w-full bg-linear-to-br from-zinc-950 via-slate-900 to-black text-white flex relative">
@@ -48,11 +62,19 @@ export default function Header() {
             <a href="/ContactUS" className="hover:text-cyan-400 transition duration-300">
               Contact
             </a>
+            {user && user.isAdmin && (
+              <a 
+                href="/admin" 
+                className="px-4 py-2 rounded-xl bg-linear-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-bold text-xs tracking-wide uppercase transition duration-300 shadow-md hover:shadow-red-500/20 hover:scale-105"
+              >
+                Admin Dashboard
+              </a>
+            )}
           </nav>
 
           {/* Right Section (User & Menu Toggle) */}
           <div className="flex items-center gap-4">
-            <UserData />
+            <UserData user={user} setUser={setUser} />
             
             {/* Hamburger Button */}
             <button
@@ -105,6 +127,15 @@ export default function Header() {
             >
               Contact
             </a>
+            {user && user.isAdmin && (
+              <a 
+                href="/admin" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-lg font-bold text-transparent bg-clip-text bg-linear-to-r from-red-400 to-rose-500 hover:text-red-400 transition duration-200 py-2 border-t border-white/5 mt-2 flex items-center justify-between"
+              >
+                <span>Admin Dashboard 🛠️</span>
+              </a>
+            )}
           </div>
         )}
       </header>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Routes, Route, useNavigate } from 'react-router-dom'
-import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa"
+import { FaShoppingCart, FaBars, FaTimes, FaSignOutAlt, FaHome } from "react-icons/fa"
 import { BsFillGiftFill } from "react-icons/bs"
 import { FaUserTie } from "react-icons/fa"
 import toast from 'react-hot-toast'
@@ -16,6 +16,13 @@ export default function AdminPage() {
 
 const [user,setUser] = useState(null)
 const navigate = useNavigate();
+
+const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("cart");
+    toast.success("Logged out successfully");
+    window.location.href = '/';
+};
 
 useEffect(() => {
     const token = localStorage.getItem("token")
@@ -70,6 +77,15 @@ useEffect(() => {
         {/* Sidebar Nav Links */}
         <nav className='flex-1 py-4 flex flex-col gap-1'>
           <Link 
+            to={"/"} 
+            onClick={() => setIsSidebarOpen(false)}
+            className='flex items-center gap-4 px-6 py-4 text-slate-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors font-semibold text-lg border-l-4 border-transparent hover:border-cyan-500'
+          >
+            <FaHome size={20} />
+            <span>User Dashboard</span>
+          </Link>
+
+          <Link 
             to={"/admin/"} 
             onClick={() => setIsSidebarOpen(false)}
             className='flex items-center gap-4 px-6 py-4 text-slate-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors font-semibold text-lg border-l-4 border-transparent hover:border-cyan-500'
@@ -96,6 +112,17 @@ useEffect(() => {
             <span>Users</span>
           </Link>
         </nav>
+
+        {/* Logout button */}
+        <div className='p-4 border-t border-gray-100 shrink-0'>
+          <button 
+            onClick={handleLogout}
+            className='w-full flex items-center gap-4 px-6 py-3.5 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl transition-all duration-200 font-semibold text-lg cursor-pointer'
+          >
+            <FaSignOutAlt size={20} />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
