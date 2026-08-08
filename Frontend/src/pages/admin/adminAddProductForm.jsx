@@ -258,10 +258,10 @@ export default function adminAddProductForm() {
               onChange={(e) => setBrand(e.target.value)}
               className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             >
-              <option value="nvidea">Nvidia</option>
-              <option value="amd">Samsung</option>
-              <option value="intel">ASUS</option>
-              <option value="dell">Dell</option>
+              <option value="Nvidia">Nvidia</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Asus">ASUS</option>
+              <option value="Dell">Dell</option>
               <option value="Apple">Apple</option>
               <option value="Google">Google</option>
 
