@@ -50,7 +50,7 @@ const products = product ? [product] : [];
             </div>
 
             {/*ProductDetails */}
-            <div className="w-full md:w-1/2 h-full flex items-center justify-center">
+            <div className="w-full md:w-1/2 flex items-start justify-start">
               {products.map((product) => (
                 <ProductCard 
                   key={product.productId || product._id}

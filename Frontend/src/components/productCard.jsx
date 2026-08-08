@@ -15,8 +15,8 @@ export default function ProductCard({ name, price, labelledprice, photo, product
   return (
     <CardContainer 
       {...(showImage ? { to: "/ProductOverview/" + productId } : {})}
-      className={`group relative overflow-hidden rounded-3xl transition-all duration-500 h-full flex flex-col justify-between ${
-        showImage ? "hover:-translate-y-3 hover:shadow-cyan-500/20" : ""
+      className={`group relative overflow-hidden rounded-3xl transition-all duration-500 flex flex-col ${
+        showImage ? "h-full justify-between hover:-translate-y-3 hover:shadow-cyan-500/20" : "w-full"
       }`}
     >
       
@@ -26,7 +26,7 @@ export default function ProductCard({ name, price, labelledprice, photo, product
       )}
 
       {/* Product Image and Details wrapper */}
-      <div className="flex flex-col flex-1 justify-between">
+      <div className={`flex flex-col ${showImage ? "flex-1 justify-between" : ""}`}>
         {/* Product Image */}
         {showImage && (
           <div className="h-56 w-full flex items-center justify-center p-4 shrink-0">
@@ -40,26 +40,26 @@ export default function ProductCard({ name, price, labelledprice, photo, product
         )}
 
         {/* Product Details */}
-        <div className="p-5 relative z-10 flex flex-col justify-between flex-grow">
+        <div className={`p-5 relative z-10 flex flex-col ${showImage ? "justify-between flex-grow" : "gap-4"}`}>
           <div>
-            <h1 className="text-xl font-bold text-accent mb-3 items-center justify-center flex gap-2">
+            <h1 className={`text-xl font-bold text-accent mb-3 flex gap-2 ${showImage ? "items-center justify-center" : "items-start justify-start"}`}>
               {name}
             </h1>
 
             {/* Brand & Model */}
             {(brand || model) && (
-              <div className="flex gap-2 text-xs font-semibold justify-center mb-3 uppercase tracking-wide">
+              <div className={`flex gap-2 text-xs font-semibold mb-3 uppercase tracking-wide ${showImage ? "justify-center" : "justify-start"}`}>
                 {brand && <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200">{brand}</span>}
                 {model && <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200">{model}</span>}
               </div>
             )}
 
-            <p className="text-gray-700 text-sm mb-4 line-clamp-2">
+            <p className={`text-gray-700 text-sm mb-4 ${showImage ? "line-clamp-2" : ""}`}>
               {description || "Premium quality product with modern features and elegant design."}
             </p>
           </div>
 
-          <div className="mt-auto">
+          <div className={showImage ? "mt-auto" : "mt-6"}>
             {/* Price Section */}
             <div className="mb-4 space-y-1">
               {/* Label Price (Original Price) */}

@@ -2,23 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../Utils/api'
 
-export default function UserData() {
+export default function UserData({ user, setUser }) {
 
-const [user,setUser] = useState(null)
 const [selectedOption, setSelectedOption] = useState("me")
 const navigate = useNavigate();
-
-useEffect(() => {
-    const token = localStorage.getItem("token")
-   if(token != null) {
-        api.get("/users/me").then((response) => {
-            setUser(response.data)
-        }).catch((err) => {
-            console.error(err);
-            setUser(null);
-        })
-   }
-}, [])
 
   return (
     <div>
